@@ -11,11 +11,11 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
-    private EmployeeEntity createNewEmployee(EmployeeEntity employeeEntity){
+    public EmployeeEntity createNewEmployee(EmployeeEntity employeeEntity){
         return employeeRepository.save(employeeEntity);
     }
 
-    private EmployeeEntity getEmployeeById(Long id){
+    public EmployeeEntity getEmployeeById(Long id){
         return employeeRepository.findById(id).orElse(null);
     }
 }

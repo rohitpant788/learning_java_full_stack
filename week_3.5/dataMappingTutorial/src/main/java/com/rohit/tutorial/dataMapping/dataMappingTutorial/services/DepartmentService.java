@@ -43,4 +43,38 @@ public class DepartmentService {
         return employeeEntity.map(
                 EmployeeEntity::getManagedDepartment).orElse(null);
     }
+
+    public DepartmentEntity assignWorkerToDepartment(Long departmentId, Long employeeId) {
+        Optional<DepartmentEntity> departmentEntity = departmentRepository.findById(departmentId);
+        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+
+        return departmentEntity.flatMap(department->
+                    employeeEntity.map(
+                            employee-> {
+                                employee.setWorkerDepartment(department);
+                                employeeRepository.save(employee);
+
+                                department.getWorkers().add(employee);
+                                return department;
+                            })).orElse(null);
+
+    }
+
+    public DepartmentEntity assignFreelancersToDepartment(Long departmentId, Long employeeId) {
+        Optional<DepartmentEntity> departmentEntity = departmentRepository.findById(departmentId);
+        Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+
+        return departmentEntity.flatMap(
+                department -> employeeEntity.map(
+                        employee ->{
+                            employee.getFreeLanceDepartment().add(department);
+                            employeeRepository.save(employee);
+
+                            department.getFreelancers().add(employee);
+                            return department;
+                        }
+                )
+        ).orElse(null);
+
+    }
 }
