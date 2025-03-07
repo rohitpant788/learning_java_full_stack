@@ -4,8 +4,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 504473180641-1f56l8n3qkj49rpc2f7htm6r22nfkntl.apps.googleusercontent.com
-            client-secret: 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
+            client-id: from google drive
+            client-secret: from google drive
           github:
             client-id: ofujasldkfjalsf
             client-secret: aldsjflaksdjfkl
