@@ -1,6 +1,7 @@
 package com.rohit.securityApp.SecurityApplication.config;
 
 import com.rohit.securityApp.SecurityApplication.filters.JwtAuthFilter;
+import com.rohit.securityApp.SecurityApplication.handlers.OAuth2SuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,8 @@ import static com.rohit.securityApp.SecurityApplication.entities.enums.Role.CREA
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
     private static final String[] publicRoutes = {
             "/error", "/auth/**", "/home.html"
     };
@@ -42,13 +45,15 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2Config -> oauth2Config
+                        .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler)
+                );
         ;
 
         return httpSecurity.build();
     }
-
-
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
